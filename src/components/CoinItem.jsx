@@ -4,33 +4,17 @@ import { Link } from 'react-router-dom';
 import { Sparklines, SparklinesLine } from 'react-sparklines';
 import { UserAuth } from '../context/AuthContext';
 import { db } from '../firebase';
-import { addDoc, arrayUnion, collection, doc, updateDoc } from 'firebase/firestore';
+import { addDoc, collection } from 'firebase/firestore';
 
 const CoinItem = ({ coin }) => {
   const [savedCoin, setSavedCoin] = useState(false);
   const { user } = UserAuth();
 
-  // const coinPath = doc(db, 'users', `${user?.email}`);
-  // const saveCoin = async () => {
-  //   if (user?.email) {
-  //     setSavedCoin(true);
-  //     await updateDoc(coinPath, {
-  //       watchList: arrayUnion({
-  //         id: coin.id,
-  //         name: coin.name,
-  //         image: coin.image,
-  //         rank: coin.market_cap_rank,
-  //         symbol: coin.symbol,
-  //       }),
-  //     });
-  //   } else {
-  //     alert('Please sign in to save a coin to your watch list');
-  //   }
-  // };
+
   const starredRef = collection(db, 'users')
   const addStar = async () => {
     if (user?.email) {
-    setSavedCoin(true);
+    setSavedCoin(!savedCoin);
     await addDoc(starredRef, {userId: user?.uid, coinId: coin.id, coinImage: coin?.image, coinName: coin?.name, coinSymbol: coin?.symbol, coinRank: coin?.market_cap_rank})
     } else {
       alert('Please sign in to save a coin to your watch list')

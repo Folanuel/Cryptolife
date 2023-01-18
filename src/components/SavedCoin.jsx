@@ -1,25 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
-import { getDocs, collection } from 'firebase/firestore';
+import { getDocs, collection, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { UserAuth } from '../context/AuthContext';
 
 const SavedCoin = () => {
   const [coins, setCoins] = useState([]);  
-  const { user } = UserAuth();
-
-
-  // const deleteCoin = async (passedid) => {
-  //   try {
-  //     const result = coins.filter((item) => item.id !== passedid);
-  //     await updateDoc(coinPath, {
-  //       watchList: result,
-  //     });
-  //   } catch (e) {
-  //     console.log(e.message);
-  //   }
-  // };
+  const { user } = UserAuth();  
 
   const fetchPost = async () => {   
         await getDocs(collection(db, "users"))
@@ -33,8 +21,13 @@ const SavedCoin = () => {
 
     useEffect(()=>{
         fetchPost();
-    }, [])
+    }, [user])
   
+    const deleteCoin = async (id) => {
+      await deleteDoc(doc(db, 'users', id ));
+      window.location.reload();
+    }
+    
 
   return (
     <div>      
@@ -63,11 +56,11 @@ const SavedCoin = () => {
                     </div>
                   </Link>
                 </td>
-                <td className='pl-8'>
-                  <AiOutlineClose
-                  
+                <td className='pl-8'>                  
+                    <AiOutlineClose                   
                     className='cursor-pointer'
-                  />
+                    onClick={() => deleteCoin(coin.id)}
+                    />                 
                 </td>
               </tr>
             ))}
@@ -81,11 +74,3 @@ const SavedCoin = () => {
 export default SavedCoin;
 
 
- // onClick={() => deleteCoin(coin.id)}
-
-//  {users?.length === 0 ? (
-//         <p>
-//           You don't have any coins saved. Please save a coin to add it to your
-//           watch list. <Link to='/'>Click here to search coins.</Link>
-//         </p>
-//       ) : ()}

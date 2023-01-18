@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AiFillLock, AiOutlineMail } from 'react-icons/ai';
 import { Link, useNavigate } from 'react-router-dom';
-import { signIn, UserAuth } from '../context/AuthContext';
+import { UserAuth } from '../context/AuthContext';
 
 const Signin = () => {
   const [email, setEmail] = useState('');
@@ -16,9 +16,9 @@ const Signin = () => {
     try {
       await signIn(email, password);
       navigate('/account')
-    } catch (e) {
-      setError(e.message);
-      console.log(e.message);
+    } catch (error) {
+      setError(error.message);
+      console.log(error.message);
     }
   };
 
@@ -59,6 +59,9 @@ const Signin = () => {
             Sign up
           </Link>
         </p>
+        <p>Test Login Details</p>
+        <p>Email: test@gmail.com</p>
+        <p>Password: 123456</p>
       </div>
     </div>
   );
